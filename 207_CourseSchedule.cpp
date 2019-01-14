@@ -5,6 +5,7 @@ public:
         int name;
         vector<int> next;       
         bool pass = false;
+        bool is_ok = false;
         
         node_type(int name_st)
         {
@@ -22,21 +23,21 @@ public:
     void check_circle(int now , int start)
     {
         if(Is_circle == true) { return ; }
-        node_list[now].pass = true;
+        node_list[now].is_ok = true;
+        
         for(int i = 0 ; i < node_list[now].next.size() ; i++)
-        {
-            if(node_list[now].next[i] == start)
+        {            
+            if(node_list[node_list[now].next[i]].pass == true)
             {
                 Is_circle = true;
                 return;
             }
-            if(node_list[node_list[now].next[i]].pass == true)
-            {
-                continue;
-            }
             else
             {
+                if(node_list[node_list[now].next[i]].is_ok == true) { continue; }
+                node_list[node_list[now].next[i]].pass = true;
                 check_circle(node_list[now].next[i] , start);
+                node_list[node_list[now].next[i]].pass = false;
             }
         }
     }
@@ -58,12 +59,11 @@ public:
         }
         for(map<int , node_type>::iterator it = node_list.begin() ; it != node_list.end() ; it++)
         {
-            Is_circle = false;
-            for(map<int , node_type>::iterator it = node_list.begin() ; it != node_list.end() ; it++)
-            {
-                it->second.pass = false;
-            }
+            if(it->second.is_ok == true) { it++; }
+            Is_circle = false;            
+            node_list[it->first].pass = true;
             check_circle(it->first , it->first);
+            node_list[it->first].pass = false;
             if(Is_circle == true) { return false; }
         }        
         return true;
