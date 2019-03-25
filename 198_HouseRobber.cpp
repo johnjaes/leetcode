@@ -5,15 +5,11 @@ public:
         vector<int> DP(nums.size() , 0);
         for(int i = 0 ; i < nums.size() ; i++)
         {
-            if(i < 2) { DP[i] = nums[i];}
+            if(i == 0) { DP[i] = nums[i];}
+            else if(i == 1) { DP[i] = max(nums[i-1] , nums[i]); }
             else
             {
-                int max = DP[i-1];
-                if(DP[i-2] + nums[i] > max) { max = DP[i-2] + nums[i]; }
-                if(i >= 3 )
-                { 
-                    if(DP[i-3] + nums[i] > max) { max = DP[i-3] + nums[i]; }
-                }
+                int max = DP[i-1] > DP[i-2]+nums[i] ? DP[i-1] : DP[i-2]+nums[i] ;
                 DP[i] = max;
             }
         }
